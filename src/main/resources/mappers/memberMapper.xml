@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javawspring.dao.MemberDAO">
+
+	<select id="getMemberIdCheck" resultType="com.spring.javawspring.vo.MemberVO">
+	 	select * from member_s where mid = #{mid};
+	</select>
+	 
+	<select id="getMemberNickNameCheck" resultType="com.spring.javawspring.vo.MemberVO">
+		select * from member_s where nickName = #{nickName};
+	</select>
+	
+	<select id="getMemberTotRecCnt" resultType="int">
+		select count(*) from member_s;
+	</select>
+	
+	<select id="getMemberTotRecCnt2" resultType="int">
+		<!-- 
+		<if test="search == '' || searchString == ''">
+			select count(*) from member_s;
+		</if>
+		
+		<if test="search != '' || searchString != ''">
+			select count(*) from member_s where ${search} like concat('%', #{searchString}, '%');
+		</if>
+		 -->
+		<!-- if절을 꼭 전체를 둘러쌀 필요는 없다 -->
+		select count(*) from member_s <if test="search != '' || searchString != ''">  where ${search} like concat('%', #{searchString}, '%')</if>;
+	</select>
+	
+	<select id="getMemberSearchTotRecCnt" resultType="int">
+		select count(*) from member_s where ${search} like concat('%', #{searchString}, '%');
+	</select>
+	
+	<select id="getMemberList" resultType="com.spring.javawspring.vo.MemberVO">
+		select * from member_s order by idx desc limit #{startIndexNo},#{pageSize}; 
+	</select>
+	
+	<select id="getMemberList2" resultType="com.spring.javawspring.vo.MemberVO">
+		<!-- 
+		<if test="search == '' || searchString == ''">
+			select * from member_s order by idx desc limit #{startIndexNo},#{pageSize}; 
+		</if>
+		<if test="search != '' || searchString != ''">
+			select * from member_s where ${search} like concat('%', #{searchString}, '%') order by idx desc limit #{startIndexNo},#{pageSize}; 
+		</if>
+		 -->
+		 select * from member_s <if test="search != '' || searchString != ''"> where ${search} like concat('%', #{searchString}, '%') </if> order by idx desc limit #{startIndexNo},#{pageSize}; 
+	</select>
+	
+	<select id="getMemberSearchList" resultType="com.spring.javawspring.vo.MemberVO">
+		select * from member_s where ${search} like concat('%', #{searchString}, '%') order by idx desc limit #{startIndexNo},#{pageSize}; 
+	</select>
+	
+	<select id="getMemberMidSearch" resultType="com.spring.javawspring.vo.MemberVO">
+		select * from member_s where email=#{email} order by idx desc; 
+	</select>
+	
+	<!-- <update id="setTodayCntUpdate">
+		update member_s set todayCnt=0 where mid=#{mid}; 
+	</update> -->
+	
+	<update id="setMemTotalUpdate">
+		update member_s set lastDate=now(), todayCnt=#{todayCnt}, visitCnt=visitCnt+1, point=#{nowTodayPoint} where mid=#{mid}; 
+	</update>
+	
+	<update id="setMemberDeleteOk">
+		update member_s set userDel='OK' where mid=#{mid}; 
+	</update>
+	
+	<update id="setMemberPwdUpdate">
+		update member_s set pwd=#{pwd} where mid=#{mid}; 
+	</update>
+	
+	<update id="setMemberUpdateOk">
+		update member_s set nickName=#{vo.nickName}, name=#{vo.name}, email=#{vo.email}, gender=#{vo.gender}, birthday=#{vo.birthday}, tel=#{vo.tel}, address=#{vo.address}, job=#{vo.job}, hobby=#{vo.hobby}, content=#{vo.content}, userInfor=#{vo.userInfor}, photo=#{vo.photo} where mid=#{mid}; 
+	</update>
+	
+	<insert id="setMemberJoinOk">
+		insert into member_s values (default, #{vo.mid}, #{vo.pwd}, #{vo.nickName}, #{vo.name}, #{vo.gender}, #{vo.birthday}, #{vo.tel}, #{vo.address}, #{vo.email}, #{vo.homePage}, #{vo.job}, #{vo.hobby}, #{vo.photo}, #{vo.content}, #{vo.userInfor}, default, default, default, default, default, default, default);
+	</insert>
+
+</mapper>

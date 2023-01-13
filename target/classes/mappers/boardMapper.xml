@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javawspring.dao.BoardDAO">
+	
+	<select id="getSearchTotRecCnt" resultType="int">
+		select count(*) from board_s <if test="search != '' || searchString != ''"> where ${search} like concat('%', #{searchString}, '%')</if>;
+	</select>
+	
+	<select id="getBoardList" resultType="com.spring.javawspring.vo.BoardVO">
+		select *, datediff(now(), wDate) as day_diff, timestampdiff(hour, wDate, now()) as hour_diff, (SELECT count(*) FROM boardReply_s WHERE boardIdx=b.idx and level=0) as replyCount from board_s b <if test="search != '' || searchString != ''"> where ${search} like concat('%', #{searchString}, '%') </if> order by idx desc limit #{startIndexNo}, #{pageSize};
+	</select>
+	
+	<select id="getNewBoardList" resultType="com.spring.javawspring.vo.BoardVO">
+		select * from board_s where <![CDATA[datediff(now(), wDate) <= 1]]>;
+	</select>
+	
+	<!-- CDATA 사용방법 -->
+	<!-- <![CDATA[idx<10]]> -->
+	
+	<select id="getPrevNext" resultType="com.spring.javawspring.vo.BoardVO">
+		select idx,title from board_s where idx in (
+		(select idx from board_s where <![CDATA[idx < #{idx}]]> order by idx desc limit 1),
+		(select idx from board_s where <![CDATA[idx > #{idx}]]> limit 1)); 
+		
+	</select>
+	
+	<select id="getBoardGoodCheck" resultType="com.spring.javawspring.vo.GoodVO">
+		select * from good_s where partIdx=#{partIdx} and part=#{part} and mid=#{mid};
+	</select>
+	
+	<insert id="setBoardInput">
+		insert into board_s values (default, #{vo.nickName}, #{vo.title}, #{vo.email}, #{vo.homePage}, #{vo.content}, default, #{vo.hostIp}, default, default, #{vo.mid});
+	</insert>
+	
+	<insert id="setBoardGoodInfor">
+		insert into good_s values (default, #{part}, #{partIdx}, #{mid}, default);
+	</insert>
+	
+	<insert id="setDbLike">
+		insert into good_s values (default, #{part}, #{partIdx}, #{mid});
+	</insert>
+	
+	<insert id="setBoardReplyInput">
+		insert into boardReply_s values (default, #{replyVO.boardIdx}, #{replyVO.mid}, #{replyVO.nickName}, default, #{replyVO.hostIp}, #{replyVO.content}, default, #{replyVO.levelOrder});
+	</insert>
+	
+	<insert id="setBoardReplyInput2">
+		insert into boardReply_s values (default, #{replyVO.boardIdx}, #{replyVO.mid}, #{replyVO.nickName}, default, #{replyVO.hostIp}, #{replyVO.content}, #{replyVO.level}, #{replyVO.levelOrder});
+	</insert>
+	
+	<select id="getBoardContent" resultType="com.spring.javawspring.vo.BoardVO">
+		select * from board_s where idx=#{idx};
+	</select>
+	
+	<select id="getBoardReply" resultType="com.spring.javawspring.vo.BoardReplyVO">
+		select * from boardReply_s where boardIdx=#{idx} order by levelOrder;
+	</select>
+	
+	<select id="getMaxLevelOrder" resultType="String">
+		select max(levelOrder) from boardReply_s where boardIdx=#{boardIdx};
+	</select>
+	
+	<update id="setReadNumPlus">
+		update board_s set readNum=readNum+1 where idx=#{idx};
+	</update>
+	
+	<update id="setClickLike">
+		update board_s set good=good+1 where idx=#{idx};
+	</update>
+	
+	<update id="setUnClickLike">
+		update board_s set good=good-1 where idx=#{idx};
+	</update>
+	
+	<update id="setBoardUpdateOk">
+		update board_s set title=#{vo.title}, email=#{vo.email}, homePage=#{vo.homePage}, content=#{vo.content}, hostIp=#{vo.hostIp} where idx=#{vo.idx};
+	</update>
+	
+	<update id="setLevelOrderPlusUpdate">
+		update boardReply_s set levelOrder=levelOrder+1 where boardIdx=#{replyVO.boardIdx} and levelOrder>#{replyVO.levelOrder};
+	</update>
+	
+	<update id="setBoardReplyUpdate">
+		update boardReply_s set content=#{vo.content}, hostIp=#{vo.hostIp}, wDate=now() where idx=#{vo.idx};
+	</update>
+	
+	<delete id="setBoardDeleteOk">
+		delete from board_s where idx=#{idx};
+	</delete>
+	
+	<delete id="setDbLikeDelete">
+		delete from good_s where partIdx=#{partIdx} and mid=#{mid} and part=#{part};
+	</delete>
+	
+	<delete id="setBoardReplyDeleteOk">
+		delete from boardReply_s where idx=#{idx};
+	</delete>
+	
+</mapper>
