@@ -136,6 +136,71 @@ public class MemberController {
 		}
 	}
 	
+//	카카오 로그인 처리
+	
+	@RequestMapping(value = "/memberKakaoLogin", method = RequestMethod.GET)
+	
+	public String memberKakaoLoginGet(HttpSession session, HttpServletRequest request, Model model, String email, String nickName, HttpServletResponse response) {
+		
+//		카카오 로그인한 회원이 현재 우리 회원인지를 확인
+		
+//		이미 가입된 회원이라면 서비스를 사용하게 하고, 그렇지 않으면 강제로 회원 가입 처리
+		
+		MemberVO vo=memberService.getmemberNickNameEmailCheck(nickName, email);
+		
+//		현재 우리 회원이 아니면 자동 회원가입 처리 (가입 필수 사항: 아이디, 닉네임, 이메일)
+//		아이디는 이메일 주소의 '@' 앞쪽 이름을 사용
+		
+		if(vo==null) {
+			
+//			아이디 결정 처리
+			
+			String mid=email.substring(0,email.indexOf("@"));
+			
+//			임시 비밀번호 발급 처리 (여기서는 0000으로 발급 처리)
+			
+			String pwd=passwordEncoder.encode("0000");
+			
+//			자동 회원 가입 처리한다.
+			
+			memberService.setKakaoMemberInputOk(mid, pwd, nickName, email);
+			
+//			가입 처리된 회원의 정보를 다시 읽어와서 vo에 담아준다.
+			vo=memberService.getMemberIdCheck(mid);
+			
+		}
+		
+//		만약에 탈퇴 신청한 회원이 카카오 로그인 처리하였다라면 'userDel' 필드를 'no'로 업데이트 한다.
+		
+		if(!vo.getUserDel().equals("no")) {
+			memberService.setMemberUserDelCheck(vo.getMid());
+		}
+		
+		
+//		회원 인증 처리된 경우 처리 내용 / strLevel 처리, session에 필요한 자료들 저장, 쿠키 값 처리, 방문자수 증가, 방문 포인트 증가.. 등등
+		
+		String strLevel="";
+		
+		if(vo.getLevel()==0) strLevel="관리자";
+		else if (vo.getLevel()==1) strLevel="운영자";
+		else if (vo.getLevel()==2) strLevel="우수회원";
+		else if (vo.getLevel()==3) strLevel="정회원";
+		else if (vo.getLevel()==4) strLevel="준회원";
+		
+		session.setAttribute("sStrLevel", strLevel);
+		session.setAttribute("sLevel", vo.getLevel());
+		session.setAttribute("sMid", vo.getMid());
+		session.setAttribute("sNickName", vo.getNickName());
+		
+//		로그인한 사용자의 방문 횟수 증가 처리 및 방문 포인트 증가 처리
+		
+		memberService.setMemberVisitProcess(vo);
+		
+//		session.setAttribute("sKakaoLogin", "1");
+		
+		return "redirect:/msg/memberLoginOk?mid="+vo.getMid();
+	}
+	
 //	회원 메인 페이지 이동
 	
 	@RequestMapping(value = "/memberMain", method = RequestMethod.GET)

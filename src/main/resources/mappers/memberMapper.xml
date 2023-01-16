@@ -56,6 +56,10 @@
 		select * from member_s where email=#{email} order by idx desc; 
 	</select>
 	
+	<select id="getmemberNickNameEmailCheck" resultType="com.spring.javawspring.vo.MemberVO">
+		select * from member_s where email=#{email} and nickName=#{nickName};
+	</select>
+	
 	<!-- <update id="setTodayCntUpdate">
 		update member_s set todayCnt=0 where mid=#{mid}; 
 	</update> -->
@@ -76,8 +80,16 @@
 		update member_s set nickName=#{vo.nickName}, name=#{vo.name}, email=#{vo.email}, gender=#{vo.gender}, birthday=#{vo.birthday}, tel=#{vo.tel}, address=#{vo.address}, job=#{vo.job}, hobby=#{vo.hobby}, content=#{vo.content}, userInfor=#{vo.userInfor}, photo=#{vo.photo} where mid=#{mid}; 
 	</update>
 	
+	<update id="setMemberUserDelCheck">
+		update member_s set userDel='no' where mid=#{mid}; 
+	</update>
+	
 	<insert id="setMemberJoinOk">
 		insert into member_s values (default, #{vo.mid}, #{vo.pwd}, #{vo.nickName}, #{vo.name}, #{vo.gender}, #{vo.birthday}, #{vo.tel}, #{vo.address}, #{vo.email}, #{vo.homePage}, #{vo.job}, #{vo.hobby}, #{vo.photo}, #{vo.content}, #{vo.userInfor}, default, default, default, default, default, default, default);
+	</insert>
+	
+	<insert id="setKakaoMemberInputOk">
+		insert into member_s values (default, #{mid}, #{pwd}, #{nickName}, '', default, now(), '010- - ', ' / / / /', #{email}, 'http://', '기타', '기타', default, '', default, default, default, default, default, default, default, default);
 	</insert>
 
 </mapper>

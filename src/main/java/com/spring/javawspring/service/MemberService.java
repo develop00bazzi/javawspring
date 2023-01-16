@@ -35,4 +35,10 @@ public interface MemberService {
 	public void setMemberPwdUpdate(String mid, String pwd);
 
 	public int setMemberUpdateOk(MultipartFile fName, MemberVO vo, String oldFName, String mid);
+
+	public MemberVO getmemberNickNameEmailCheck(String nickName, String email);
+
+	public void setKakaoMemberInputOk(String mid, String pwd, String nickName, String email);
+
+	public void setMemberUserDelCheck(String mid);
 }

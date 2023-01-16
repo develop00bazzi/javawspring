@@ -134,6 +134,11 @@ public class MessageController {
 			model.addAttribute("url", "board/boardList"+flag);
 		}
 		
+		else if(msgFlag.equals("pdsInputOk")) {
+			model.addAttribute("msg", "자료실에 자료가 등록되었습니다!");
+			model.addAttribute("url", "pds/pdsList");
+		}
+		
 		return "include/message";
 	}
 }

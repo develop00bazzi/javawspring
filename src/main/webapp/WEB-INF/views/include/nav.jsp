@@ -3,6 +3,25 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
 
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
+<script>
+	window.Kakao.init("5b97ef649f5d9df28ecf21280488505c");
+</script>
+
+<script>
+	function kakaoLogout() {
+	    Kakao.Auth.logout()
+	      .then(function() {
+	        alert('logout ok\naccess token -> ' + Kakao.Auth.getAccessToken());
+	        deleteCookie();
+	      })
+	      .catch(function() {
+	        alert('Not logged in');
+	      });
+	  }
+</script>
+
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-black w3-card">
@@ -61,7 +80,12 @@
     	<a href="${ctp}/member/memberJoin" class="w3-bar-item w3-button w3-padding-large w3-hide-small">회원가입</a>    	
     </c:if>
     <c:if test="${!empty sLevel || !empty sMid}">
-    	<a href="${ctp}/member/memberLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">로그아웃</a>
+   		<a href="${ctp}/member/memberLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">로그아웃</a>
+    	<%-- <c:if test="${empty sKakaoLogin}">
+    	</c:if>
+    	<c:if test="${!empty sKakaoLogin}">
+    		<a href="javascript:kakaoLogout()" class="w3-bar-item w3-button w3-padding-large w3-hide-small">카카오 로그아웃</a>
+    	</c:if> --%>
     </c:if>
     
     <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>

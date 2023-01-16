@@ -8,48 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>memberLogin.jsp</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp"></jsp:include>
-	<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+	<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
+	  integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
 	<script>
-		'use strict'
-		
-		// 자바 스크립트 앱키 설정
-		
-		window.Kakao.init("5b97ef649f5d9df28ecf21280488505c");
-		
-		// 카카오 로그인
-		
-		function loginWithKakao() {
-			window.Kakao.Auth.login({
-				scope:'profile_nickname, account_email',
-				success:function(autoObj) {
-					console.log(autoObj);
-					window.Kakao.API.request({
-						url:'/v2/user/me',
-						success:function(res) {
-							const kakao_account=res.kakao_account;
-							console.log(kakao_account);
-							console.log(Kakao.Auth.getAccessToken(), "로그인");
-							// alert(kakao_account.email+"/"+kakao_account.profile.nickname);
-							// alert(JSON.stringify(kakao_account));
-							
-							// location.href="${ctp}/member/memberKakaoLogin?nickName="+kakao_account.profile.nickname+"&email="+kakao_account.email;
-							
-						}
-					});
-				}
-			});
-		}
-		
-		// 카카오 로그아웃
-		
-		// 현재 사용한 함수는 세션만 끊어주는 상태인데 완벽하게 로그인 상태를 해제하려면 어떻게 해야하는지 찾아보기
-		
-		function kakaoLogout(kakaoKey) {
-			window.Kakao.Auth.logout(function() {
-				console.log(Kakao.Auth.getAccessToken(), "토큰 정보가 없습니다. (로그아웃되셨습니다!)");
-			});
-		}
-		
+	  Kakao.init('5b97ef649f5d9df28ecf21280488505c'); // 사용하려는 앱의 JavaScript 키 입력
 	</script>
 </head>
 <body>
@@ -82,10 +44,11 @@
 			    </div>
 			    <div class="text-center mb-3">
 			    	<a id="kakao-login-btn" href="javascript:loginWithKakao()">
-					  <img src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="200"
+					  <img src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="222"
 					    alt="카카오 로그인 버튼" />
 					</a>
-					<a href="javascript:kakaoLogout()" class="btn btn-danger">로그아웃</a>
+					<p id="token-result"></p>
+					<button class="api-btn" onclick="requestUserInfo()">사용자 정보 가져오기</button>
 			    </div>
 			    <div class="row" style="font-size:12px">
 			      <span class="col"><input type="checkbox" name="idCheck" checked /> 아이디 저장</span>
@@ -104,5 +67,45 @@
 <script	src="${ctp}/js/slideShow.js" type="text/javascript"></script>
 <script	src="${ctp}/js/smallMenu.js" type="text/javascript"></script>
 <script	src="${ctp}/js/ticketModal.js" type="text/javascript"></script>
+<script>
+  function loginWithKakao() {
+    Kakao.Auth.authorize({
+      redirectUri: 'http://localhost:9090/javawspring/member/memberLogin',
+      state: 'userme',
+    });
+  }
+
+  function requestUserInfo() {
+    Kakao.API.request({
+      url: '/v2/user/me',
+    })
+      .then(function(res) {
+        alert(JSON.stringify(res));
+      })
+      .catch(function(err) {
+        alert(
+          'failed to request user information: ' + JSON.stringify(err)
+        );
+      });
+  }
+
+  // 아래는 데모를 위한 UI 코드입니다.
+  displayToken()
+  function displayToken() {
+    var token = getCookie('authorize-access-token');
+	
+    if(token) {
+    	alert("");
+      Kakao.Auth.setAccessToken(token);
+      document.querySelector('#token-result').innerText = 'login success, ready to request API';
+      document.querySelector('button.api-btn').style.visibility = 'visible';
+    }
+  }
+
+  function getCookie(name) {
+    var parts = document.cookie.split(name + '=');
+    if (parts.length === 2) { return parts[1].split(';')[0]; }
+  }
+</script>
 </body>
 </html>
