@@ -1,5 +1,6 @@
 package com.spring.javawspring.service;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -112,6 +113,35 @@ public class PdsServiceImpl implements PdsService {
 	@Override
 	public void setPdsDownNum(int idx) {
 		pdsDAO.setPdsDownNum(idx);
+	}
+
+	@Override
+	public PdsVO getPdsContent(int idx) {
+		
+		return pdsDAO.getPdsContent(idx);
+	}
+
+	@Override
+	public void setPdsDelete(PdsVO vo) {
+		
+		HttpServletRequest request=((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+		
+		String realPath=request.getSession().getServletContext().getRealPath("/resources/data/pds/");
+		
+		String[] fSNames=vo.getFSName().split("/");
+		
+//		서버에 존재하는 파일들을 삭제 처리한다.
+		
+		for(int i=0; i<fSNames.length; i++) {
+			File file = new File(realPath+fSNames[i]);
+			if(file.exists()) file.delete();			
+		}
+		
+//		DB에 pds 게시글 내역 삭제 처리
+		
+		pdsDAO.setPdsDelete(vo.getIdx());
+		
+		
 	}
 
 	

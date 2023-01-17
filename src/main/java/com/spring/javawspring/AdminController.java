@@ -114,7 +114,7 @@ public class AdminController {
 //	파일 리스트 조회 (ckeditor 폴더 파일 리스트)
 	
 	@SuppressWarnings("deprecation")
-	@RequestMapping(value = "/file/fileList", method = RequestMethod.GET)
+	@RequestMapping(value = "/file/ckFileList", method = RequestMethod.GET)
 	public String fileListGet(HttpServletRequest request, Model model) {
 		
 		String realPath=request.getRealPath("/resources/data/ckeditor/");
@@ -123,7 +123,7 @@ public class AdminController {
 		
 		model.addAttribute("files", files);
 		
-		return "admin/file/fileList";
+		return "admin/file/ckFileList";
 	}
 	
 //	관리자 메뉴 선택 파일 삭제
@@ -200,6 +200,41 @@ public class AdminController {
 		
 		return res+"";
 	}
+	
+//	관리자 자료실 다운로드 파일 목록 확인 페이지 이동
+	
+	@RequestMapping(value = "/file/pdsDownFileList", method = RequestMethod.GET)
+	public String pdsDownFileListGet(HttpServletRequest request, Model model) {
+		
+		String realPath=request.getRealPath("/resources/data/pds/temp/");
+		
+		String[] files=new File(realPath).list();
+		
+		model.addAttribute("files", files);
+				
+		return "admin/file/pdsDownFileList";
+	}
+	
+//	관리자 메뉴 선택 파일 삭제
+	
+	@ResponseBody
+	@RequestMapping(value = "/file/pdsTempFileSelectDelete", method = RequestMethod.POST)
+	public String pdsTempFileSelectDeletePost(HttpServletRequest request, String deletePhotos) {
+		String realPath=request.getRealPath("/resources/data/pds/temp/");
+		String[] deletePhoto=deletePhotos.split("/");
+		
+		int res=0;
+		
+		for(int i=0; i<deletePhoto.length; i++) {
+			File deleteFile=new File(realPath+deletePhoto[i]);
+			if(deleteFile.exists()) deleteFile.delete();
+		}
+		
+		res=1;
+		
+		return res+"";
+	}
+	
 	
 	
 }

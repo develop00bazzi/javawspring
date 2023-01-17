@@ -17,4 +17,8 @@ public interface StudyDAO {
 
 	public ArrayList<MemberVO> getEmailList();
 
+	public void setQrCodeDB(@Param("strUid") String strUid, @Param("qrCodeName") String qrCodeName, @Param("bigo") String bigo);
+
+	public String getQrCodeDB(@Param("idx") String idx);
+
 }

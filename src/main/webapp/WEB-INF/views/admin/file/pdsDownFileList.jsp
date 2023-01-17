@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>fileList.jsp</title>
+    <title>pdsDownFileList.jsp</title>
     <jsp:include page="/WEB-INF/views/include/bs4.jsp"></jsp:include>
     <style>
     	
@@ -55,7 +55,7 @@
   		  
   		$.ajax({
 	  		type : "post",
-	  		url  : "${ctp}/admin/file/fileSelectDelete",
+	  		url  : "${ctp}/admin/file/pdsTempFileSelectDelete",
 	  		data : {deletePhotos : deletePhotos},
 	  		success:function(res) {
 	  			if(res == "1") {
@@ -76,16 +76,16 @@
 <body>
 <p><br/></p>
 <div class="container">
-	<h2>서버 파일 리스트</h2>
+	<h2>자료실 다운로드 파일 리스트</h2>
 	<hr/>
 	<p>
-		서버의 파일 경로: ${ctp}/data/ckeditor/~~~ 파일명
+		자료실 다운로드 파일 목록 경로: ${ctp}/data/pds/temp/~~~ 파일명
 	</p>
 	<hr/>
 	<form name="myform">
 		<table class="table table-bordered">
 			<tr>
-				<th class="text-center">ckeditor 파일 삭제</th>
+				<th class="text-center">자료실 파일 다운로드 목록 조회</th>
 			</tr>
 			<tr>
 				<td class="text-center">
@@ -116,7 +116,7 @@
 					<td>
 						<c:if test="${file=='board'}">${file} 폴더</c:if>
 						<c:if test="${file!='board'}">
-							<b>파일명:${ctp}/data/ckeditor/${file} </b>
+							<b>파일명:${ctp}/data/pds/temp/${file} </b>
 						</c:if>
 					</td>
 					<td class="text-center">

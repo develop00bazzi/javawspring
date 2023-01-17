@@ -159,9 +159,9 @@
 		<form name="searchForm">
 			<b>검색: </b>
 			<select name="search">
-				<option value="title">글 제목</option>
-				<option value="nickName">글쓴이</option>
-				<option value="content">글내용</option>
+				<option value="title" <c:if test="${pageVo.search=='title'}">selected</c:if>>글 제목</option>
+				<option value="nickName" <c:if test="${pageVo.search=='nickName'}">selected</c:if>>글쓴이</option>
+				<option value="content" <c:if test="${pageVo.search=='content'}">selected</c:if>>글내용</option>
 			</select>
 			<input type="text" name="searchString" id="searchString" value="${pageVo.searchString}"/>
 			<input type="button" value="검색" onclick="searchCheck()" class="btn btn-sm btn-secondary" />

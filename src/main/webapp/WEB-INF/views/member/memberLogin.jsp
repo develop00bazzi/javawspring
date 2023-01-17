@@ -32,7 +32,7 @@
 							// alert(kakao_account.email+"/"+kakao_account.profile.nickname);
 							// alert(JSON.stringify(kakao_account));
 							
-							// location.href="${ctp}/member/memberKakaoLogin?nickName="+kakao_account.profile.nickname+"&email="+kakao_account.email;
+							location.href="${ctp}/member/memberKakaoLogin?nickName="+kakao_account.profile.nickname+"&email="+kakao_account.email;
 							
 						}
 					});

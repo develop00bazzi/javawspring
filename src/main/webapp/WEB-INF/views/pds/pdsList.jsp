@@ -13,10 +13,14 @@
 	<script>
 		'use strict';
 		
+		/* 분류 구분해서 출력 */
+		
 		function partCheck() {
 			let part=partForm.part.value;
 			location.href="${ctp}/pds/pdsList?part="+part+"&pageSize=${pageSize}&flag=${flag}&search=${search}&searchString=${searchString}";
 		}
+		
+		/* 한 페이지에 몇개 보여줄지 */
 		
 		function pCheck() {
 			let pageSize=document.getElementById("pageSize").value;
@@ -62,46 +66,12 @@
 	    		}
 	    	});
 	    }
-		
-		/* 선택한 항목의 자료 삭제하기 prompt창을 통하여 비밀번호를 입력받아 처리 */
-		
-		function pdsDelCheck(idx,fSName) {
-			let ans=confirm("선택된 자료 파일을 삭제하시겠습니까?");
-			if(!ans) return false;
 			
-			let pwd=prompt("비밀번호를 입력하세요!");
-			
-			let query={
-				idx: idx,
-				fSName: fSName,
-				pwd:pwd
-			}
-			
-			$.ajax({
-				type: "post",
-				url: "${ctp}/pdsDelete.pds",
-				data: query,
-				success: function(res) {
-					if(res=="1") {
-						alert("자료가 정상적으로 삭제되었습니다.");
-						location.reload();
-					}
-					else {
-						alert("자료 삭제 실패");
-					}
-				},
-				error: function() {
-					alert("전송 오류");
-				}
-			});
-		}
-		
 		/* modal 창을 통하여 비밀번호 확인 후 파일 삭제 처리 */
 		
-		function pdsDelCheckModal(idx,fSName) {
+		function pdsDelCheckModal(idx) {
 			$("#myPwdModal").on("show.bs.modal", function(e){
 				$(".modal-body #idx").val(idx);
-				$(".modal-body #fSName").val(fSName);
 			});
 			
 		}
@@ -111,18 +81,16 @@
 		function modalPwdDelete() {
 			let pwd=pwdModalForm.pwd.value;
 			let idx=pwdModalForm.idx.value;
-			let fSName=pwdModalForm.fSName.value;
 			
 			let query={
 					idx: idx,
-					fSName: fSName,
 					pwd:pwd
 				};
 			
 				
 				$.ajax({
 					type: "post",
-					url: "${ctp}/pdsDelete.pds",
+					url: "${ctp}/pds/pdsDelete",
 					data: query,
 					success: function(res) {
 						if(res=="1") {
@@ -212,7 +180,7 @@
 					<c:if test="${vo.hour_diff<=24}">
 						<img src="${ctp}/images/new.gif"/>
 					</c:if>
-					<a href="${ctp}/pdsContent.pds?part=${part}&idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}&flag=${flag}&search=${search}&searchString=${searchString}">
+					<a href="${ctp}/pds/pdsContent?part=${part}&idx=${vo.idx}&pag=${pageVo.pag}&pageSize=${pageVo.pageSize}&flag=${pageVo.flag}&search=${pageVo.search}&searchString=${pageVo.searchString}">
 						${vo.title}
 					</a>
 				</td>
@@ -250,9 +218,8 @@
 				<td class="align-middle">${vo.downNum}</td>
 				<td class="align-middle">
 		          <a href="#" onclick="modalView('${vo.title}','${vo.nickName}','${vo.mid}','${vo.part}','${vo.FName}','${vo.FSName}','${vo.FSize}','${vo.downNum}','${vo.FDate}')" class="badge badge-secondary" data-toggle="modal" data-target="#myModal">글 요약</a><br/>
-		          <a href="${ctp}/pdsTotalDown.pds?idx=${vo.idx}" class="badge badge-secondary">전체다운</a><br/>
-		          <a href="javascript:pdsDelCheck('${vo.idx}','${vo.FSName}')" class="badge badge-secondary">삭제 1(prompt)</a><br>
-		          <a href="#" onclick="javascript:pdsDelCheckModal('${vo.idx}','${vo.FSName}')" class="badge badge-secondary" data-toggle="modal" data-target="#myPwdModal">삭제 2(modal)</a>
+		          <a href="${ctp}/pds/pdsTotalDown?idx=${vo.idx}" class="badge badge-secondary">전체다운</a><br/>
+		          <a href="#" onclick="javascript:pdsDelCheckModal(${vo.idx})" class="badge badge-secondary" data-toggle="modal" data-target="#myPwdModal">파일 삭제</a>
 		        </td>
 			</tr>
 			<c:set var="curScrStartNo" value="${curScrStartNo-1}"></c:set>
@@ -352,19 +319,18 @@
 	      <!-- Modal Header -->
 	     <div class="modal-header">
 	       <h4 class="modal-title">자료실 게시글 삭제</h4>
-	       <p>자료를 삭제하시려면 게시글의 비밀번호를 입력해주세요.</p>
+	       <!-- <p>자료를 삭제하시려면 게시글의 비밀번호를 입력해주세요.</p> -->
 	       <button type="button" class="close" data-dismiss="modal">&times;</button>
 	     </div>
 	     
 	     <!-- Modal body -->
 	     <div class="modal-body">
+	     	<p>파일을 삭제하시려면 게시글 비밀번호를 입력해주세요!</p>
 	       <form name="pwdModalForm" method="post" <%-- action="${ctp}/pdsDelete.pds" --%> class="was-validated">
 	       	비밀번호:
 	       	<input type="password" name="pwd" id="pwd" placeholder="비밀번호를 입력하세요." class="form-control mb-2" required />
 	       	<input type="button" value="삭제" onclick="modalPwdDelete()" class="btn btn-success form-control" />
 	       	<input type="hidden" name="idx" id="idx" />
-	       	<input type="hidden" name="fSName" id="fSName" />
-	       	<input type="hidden" name="flag" id="modal" />
 	       </form>
 	     </div>
 	     

@@ -1,5 +1,6 @@
 package com.spring.javawspring;
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -19,11 +21,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javawspring.common.ARIAUtil;
 import com.spring.javawspring.common.SecurityUtil;
+import com.spring.javawspring.service.MemberService;
 import com.spring.javawspring.service.StudyService;
 import com.spring.javawspring.vo.GuestVO;
 import com.spring.javawspring.vo.MailVO;
@@ -35,6 +39,9 @@ public class StudyController {
 	
 	@Autowired
 	StudyService studyService;
+	
+	@Autowired
+	MemberService memberService;
 	
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
@@ -373,6 +380,67 @@ public class StudyController {
 	public String calenderGet() {
 		studyService.getCalendar();
 		return "study/calendar/calendar";
+	}
+	
+//	QR 코드 작성 폼
+	
+	@RequestMapping(value = "/qrCode", method = RequestMethod.GET)
+	public String qrCodeGet(HttpSession session,Model model) {
+		
+		String mid=(String)session.getAttribute("sMid");
+		
+		MemberVO vo=memberService.getMemberIdCheck(mid);
+		
+		model.addAttribute("vo", vo);
+		
+		return "study/qrCode/qrCode";
+	}
+	
+//	QR 코드 생성
+	
+	@ResponseBody
+	@RequestMapping(value = "/qrCode", method = RequestMethod.POST)
+	public String qrCodePost(HttpServletRequest request, 
+			@RequestParam(name = "mid", defaultValue = "", required = false) String mid, 
+			@RequestParam(name = "moveFlag", defaultValue = "", required = false) String moveFlag) {
+		
+		String realPath=request.getSession().getServletContext().getRealPath("/resources/data/qrCode/");
+		
+		String qrCodeName=studyService.qrCreate(mid, moveFlag, realPath);
+		
+		return qrCodeName;
+	}
+	
+//	QR 코드 생성 DB 연동
+	
+	@ResponseBody
+	@RequestMapping(value = "/qrCodeDB", method = RequestMethod.POST)
+	public String qrCodeDBPost(HttpServletRequest request, 
+			@RequestParam(name = "mid", defaultValue = "", required = false) String mid, 
+			@RequestParam(name = "nickName", defaultValue = "", required = false) String nickName, 
+			@RequestParam(name = "bigo", defaultValue = "", required = false) String bigo) {
+		
+		String realPath=request.getSession().getServletContext().getRealPath("/resources/data/qrCode/");
+		
+		String qrCodeName=studyService.qrCreateDB(mid, nickName, bigo, realPath);
+		
+		return qrCodeName;
+	}
+	
+//	QR 코드 조회 결과
+	
+	@RequestMapping(value = "/qrCodeRes", method = RequestMethod.GET)
+	public String qrCodeRes(Model model, String idx) {
+		
+		System.out.println(idx);
+		
+		String bigo=studyService.getQrCodeDB(idx);
+		
+		System.out.println(bigo);
+		
+		model.addAttribute("bigo",bigo);
+		
+		return "study/qrCode/qrCodeRes";
 	}
 	
 	

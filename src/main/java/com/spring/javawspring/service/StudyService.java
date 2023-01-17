@@ -25,4 +25,10 @@ public interface StudyService {
 
 	public void getCalendar();
 
+	public String qrCreate(String mid, String moveFlag, String realPath);
+
+	public String qrCreateDB(String mid, String nickName, String bigo, String realPath);
+
+	public String getQrCodeDB(String idx);
+
 }

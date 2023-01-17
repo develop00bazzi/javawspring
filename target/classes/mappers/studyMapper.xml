@@ -16,5 +16,13 @@
 	<select id="getEmailList" resultType="com.spring.javawspring.vo.MemberVO">
         select * from member_s;
     </select>
+    
+    <select id="getQrCodeDB" resultType="String">
+    	select bigo from qrcode where idx=#{idx}
+    </select>
+    
+    <insert id="setQrCodeDB">
+    	insert into qrcode values (#{strUid}, #{qrCodeName}, #{bigo});
+    </insert>
 	
 </mapper>

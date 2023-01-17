@@ -68,7 +68,10 @@
 				<a href="${ctp}/" target="_top">홈으로</a>
 			</p>
         	<p>
-				<a href="${ctp}/admin/file/fileList" target="adminContent">임시 파일 관리</a>
+				<a href="${ctp}/admin/file/ckFileList" target="adminContent">게시판 글 작성 사진 관리</a>
+			</p>
+        	<p>
+				<a href="${ctp}/admin/file/pdsDownFileList" target="adminContent">자료실 다운로드 관리</a>
 			</p>
         </div>
       </div>
