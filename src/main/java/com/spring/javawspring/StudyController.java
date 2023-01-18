@@ -1,6 +1,5 @@
 package com.spring.javawspring;
 
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import com.spring.javawspring.common.SecurityUtil;
 import com.spring.javawspring.service.MemberService;
 import com.spring.javawspring.service.StudyService;
 import com.spring.javawspring.vo.GuestVO;
+import com.spring.javawspring.vo.KakaoAddressVO;
 import com.spring.javawspring.vo.MailVO;
 import com.spring.javawspring.vo.MemberVO;
 
@@ -442,6 +442,95 @@ public class StudyController {
 		
 		return "study/qrCode/qrCodeRes";
 	}
+	
+//	카카오맵 기본 지도 페이지
+	
+	@RequestMapping(value = "/kakaomap/kakaomap", method = RequestMethod.GET)
+	public String kakaoMapGet() {
+		
+		return "study/kakaomap/kakaomap";
+	}
+	
+//	카카오맵 '마커 표시 / DB 저장'
+	
+	@RequestMapping(value = "/kakaomap/kakaoEx1", method = RequestMethod.GET)
+	public String kakaoEx1Get() {
+		
+		return "study/kakaomap/kakaoEx1";
+	}
+	
+//	카카오맵 '마커 표시 / DB 저장'
+	
+	@ResponseBody
+	@RequestMapping(value = "/kakaomap/kakaoEx1", method = RequestMethod.POST)
+	public String kakaoEx1Post(KakaoAddressVO vo) {
+		
+		KakaoAddressVO searchVO=studyService.getKakaoAddressName(vo.getAddress());
+		
+		if(searchVO!=null) return "0";
+		
+		studyService.setKakaoAddressName(vo);
+		
+		return "1";
+	}
+	
+//	카카오맵 'DB 저장된 지역의 검색 / 삭제'
+	
+	@RequestMapping(value = "/kakaomap/kakaoEx2", method = RequestMethod.GET)
+	public String kakaoEx2Get(Model model,
+			@RequestParam(name = "address", defaultValue = "그린컴퓨터아트학원 청주", required = false) String address) {
+		
+		KakaoAddressVO vo=studyService.getKakaoAddressName(address);
+		
+		ArrayList<KakaoAddressVO> vos=studyService.getKakaoAddressNameList();
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("vos", vos);
+		model.addAttribute("address",address);
+		
+		return "study/kakaomap/kakaoEx2";
+	}
+	
+//	카카오맵 연습 DB 저장된 자료 삭제
+	
+	@ResponseBody
+	@RequestMapping(value = "/kakaomap/kakaoEx2Delete", method = RequestMethod.POST)
+	public String kakaoEx2DeletePost(String address) {
+		
+		System.out.println(address);
+		
+		studyService.kakaoEx2DeletePost(address);
+		
+		return "";
+	}
+	
+//	카카오맵 API 지원 키워드로 장소 검색하기 활용 DB 저장
+	
+	@RequestMapping(value = "/kakaomap/kakaoEx3", method = RequestMethod.GET)
+	public String kakaoEx3Get() {
+		
+		return "study/kakaomap/kakaoEx3";
+	}
+	
+//	카테고리별 장소 조회 연습
+	
+	
+	@RequestMapping(value = "/kakaomap/kakaoEx4", method = RequestMethod.GET)
+	public String kakaoEx4Get(Model model,
+			@RequestParam(name = "address", defaultValue = "그린컴퓨터아트학원 청주", required = false) String address
+			) {
+		
+		KakaoAddressVO vo=studyService.getKakaoAddressName(address);
+		
+		ArrayList<KakaoAddressVO> vos=studyService.getKakaoAddressNameList();
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("vos", vos);
+		model.addAttribute("address",address);
+		
+		return "study/kakaomap/kakaoEx4";
+	}
+	
 	
 	
 }

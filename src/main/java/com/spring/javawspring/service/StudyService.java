@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javawspring.vo.GuestVO;
 import com.spring.javawspring.vo.MemberVO;
+import com.spring.javawspring.vo.KakaoAddressVO;
 
 public interface StudyService {
 
@@ -30,5 +31,13 @@ public interface StudyService {
 	public String qrCreateDB(String mid, String nickName, String bigo, String realPath);
 
 	public String getQrCodeDB(String idx);
+
+	public KakaoAddressVO getKakaoAddressName(String address);
+
+	public void setKakaoAddressName(KakaoAddressVO vo);
+
+	public ArrayList<KakaoAddressVO> getKakaoAddressNameList();
+
+	public void kakaoEx2DeletePost(String address);
 
 }

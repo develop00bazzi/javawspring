@@ -21,8 +21,24 @@
     	select bigo from qrcode where idx=#{idx}
     </select>
     
+    <select id="getKakaoAddressName" resultType="com.spring.javawspring.vo.KakaoAddressVO">
+    	select * from kakaoAddress where address=#{address};
+    </select>
+    
+    <select id="getKakaoAddressNameList" resultType="com.spring.javawspring.vo.KakaoAddressVO">
+    	select * from kakaoAddress order by address;
+    </select>
+    
     <insert id="setQrCodeDB">
     	insert into qrcode values (#{strUid}, #{qrCodeName}, #{bigo});
     </insert>
+    
+    <insert id="setKakaoAddressName">
+    	insert into kakaoAddress values (#{vo.address}, #{vo.latitude}, #{vo.longitude});
+    </insert>
+    
+  	<delete id="kakaoEx2DeletePost">
+  		delete from kakaoAddress where address=#{address};
+  	</delete>
 	
 </mapper>

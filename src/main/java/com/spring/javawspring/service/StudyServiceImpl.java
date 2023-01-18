@@ -28,6 +28,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.spring.javawspring.dao.StudyDAO;
 import com.spring.javawspring.vo.GuestVO;
 import com.spring.javawspring.vo.MemberVO;
+import com.spring.javawspring.vo.KakaoAddressVO;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -394,5 +395,27 @@ public class StudyServiceImpl implements StudyService {
 	public String getQrCodeDB(String idx) {
 		
 		return studyDAO.getQrCodeDB(idx);
+	}
+
+	@Override
+	public KakaoAddressVO getKakaoAddressName(String address) {
+		
+		return studyDAO.getKakaoAddressName(address);
+	}
+
+	@Override
+	public void setKakaoAddressName(KakaoAddressVO vo) {
+		studyDAO.setKakaoAddressName(vo);
+	}
+
+	@Override
+	public ArrayList<KakaoAddressVO> getKakaoAddressNameList() {
+		
+		return studyDAO.getKakaoAddressNameList();
+	}
+
+	@Override
+	public void kakaoEx2DeletePost(String address) {
+		studyDAO.kakaoEx2DeletePost(address);
 	}
 }
