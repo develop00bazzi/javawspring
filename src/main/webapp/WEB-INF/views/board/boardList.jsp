@@ -125,7 +125,7 @@
   	
  
   	
-  		<!-- 첫 페이지 | 이전블록 | 1(4) 2(5) 3(6) | 다음블록 | 마지막 페이지 -->
+	<!-- 첫 페이지 | 이전블록 | 1(4) 2(5) 3(6) | 다음블록 | 마지막 페이지 -->
 	<div class="text-center">
 		<ul class="pagination justify-content-center">
 			<c:if test="${pageVo.pag>1}">

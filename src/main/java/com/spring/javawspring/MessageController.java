@@ -139,6 +139,21 @@ public class MessageController {
 			model.addAttribute("url", "pds/pdsList");
 		}
 		
+		else if(msgFlag.equals("wmMemberIdNo")) {
+			model.addAttribute("msg", "받는 사람의 아이디가 존재하지 않습니다!");
+			model.addAttribute("url", "webMessage/webMessage?mSw=0");
+		}
+		
+		else if(msgFlag.equals("wmInputOk")) {
+			model.addAttribute("msg", "메세지 발송 성공!");
+			model.addAttribute("url", "webMessage/webMessage?mSw=1");
+		}
+		
+		else if(msgFlag.equals("wmDeleteAll")) {
+			model.addAttribute("msg", "휴지통을 모두 비웠습니다!");
+			model.addAttribute("url", "webMessage/webMessage?mSw=1");
+		}
+		
 		return "include/message";
 	}
 }

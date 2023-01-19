@@ -54,7 +54,7 @@
 	      <button class="w3-padding-large w3-button" title="More">수업 공부 자료 2 &nbsp;<i class="fa fa-caret-down"></i></button>     
 	      <div class="w3-dropdown-content w3-bar-block w3-card-4">
 	        <a href="${ctp}/study/qrCode" class="w3-bar-item w3-button">QR 코드 쿠폰 발급</a>
-	        <a href="#" class="w3-bar-item w3-button">웹 메세지</a>
+	        <a href="${ctp}/webMessage/webMessage" class="w3-bar-item w3-button">웹 메세지</a>
 	        <a href="${ctp}/study/kakaomap/kakaomap" class="w3-bar-item w3-button">카카오맵</a>
 	        <a href="#" class="w3-bar-item w3-button">구글 차트</a>
 	        <a href="#" class="w3-bar-item w3-button">트랜잭션</a>

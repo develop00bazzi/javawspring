@@ -95,6 +95,7 @@
 		<interceptor>
 			<mapping path="/member/**"/>
 			<mapping path="/board/boardList"/>
+			<mapping path="/webMessage/**"/>
 			<exclude-mapping path="/member/memberLogin"/>
 			<exclude-mapping path="/member/memberLogout"/>
 			<exclude-mapping path="/member/memberJoin"/>
@@ -110,7 +111,7 @@
 			<mapping path="/board/**"/>
 			<mapping path="/member/memberList"/>
 			<mapping path="/pds/pdsList"/>
-			<mapping path="/pds/pdsTotalDown"/>
+			<mapping path="/pds/pdsTotaAction"/>
 			<exclude-mapping path="/board/boardList"/>
 			<beans:ref bean="level3Interceptor" />
 		</interceptor>
@@ -118,6 +119,7 @@
 			<mapping path="/pds/**"/>
 			<exclude-mapping path="/pds/pdsList"/>
 			<exclude-mapping path="/pds/pdsTotalDown"/>
+			<exclude-mapping path="/pds/pdsDownAction"/>
 			<beans:ref bean="level2Interceptor" />
 		</interceptor>
 	</interceptors>
