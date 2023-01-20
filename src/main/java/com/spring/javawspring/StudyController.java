@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,6 +33,7 @@ import com.spring.javawspring.vo.GuestVO;
 import com.spring.javawspring.vo.KakaoAddressVO;
 import com.spring.javawspring.vo.MailVO;
 import com.spring.javawspring.vo.MemberVO;
+import com.spring.javawspring.vo.TransactionVO;
 
 @Controller
 @RequestMapping("/study")
@@ -531,6 +533,49 @@ public class StudyController {
 		return "study/kakaomap/kakaoEx4";
 	}
 	
+//	트랜잭션 연습 폼 이동
 	
+	@RequestMapping(value = "/transaction/transaction", method=RequestMethod.GET)
+	public String transactionGet() {
+		
+		return "study/transaction/transaction";
+	}
+	
+//	트랜잭션 입력 1번 폼 개별 처리
+	
+	@Transactional
+	@RequestMapping(value = "/transaction/input1", method=RequestMethod.POST)
+	public String transactionInput1Post(TransactionVO vo) {
+		
+		studyService.setTransInput1(vo);	// user에 등록
+		studyService.setTransInput2(vo);	// user2에 등록
+		
+		
+		return "study/transaction/transaction";
+	}
+	
+//	트랜잭션 입력 2번 폼 일괄 처리
+	
+	@RequestMapping(value = "/transaction/input2", method=RequestMethod.POST)
+	public String transactionInput2Post(TransactionVO vo) {
+		
+		studyService.setTransInput(vo);	// user / user2에 동시 등록
+		
+		return "study/transaction/transaction";
+	}
+	
+//	트랜잭션 리스트
+	
+	@RequestMapping(value = "/transaction/transactionList", method=RequestMethod.GET)
+	public String transactionListGet(Model model) {
+		
+		ArrayList<TransactionVO> vos=studyService.getTransactionList();
+		
+		model.addAttribute("vos", vos);
+		
+		return "study/transaction/transactionList";
+	}
+
 	
 }
+

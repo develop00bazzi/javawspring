@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javawspring.vo.GuestVO;
 import com.spring.javawspring.vo.MemberVO;
+import com.spring.javawspring.vo.TransactionVO;
 import com.spring.javawspring.vo.KakaoAddressVO;
 
 public interface StudyService {
@@ -39,5 +40,13 @@ public interface StudyService {
 	public ArrayList<KakaoAddressVO> getKakaoAddressNameList();
 
 	public void kakaoEx2DeletePost(String address);
+
+	public void setTransInput1(TransactionVO vo);
+
+	public void setTransInput2(TransactionVO vo);
+
+	public ArrayList<TransactionVO> getTransactionList();
+
+	public void setTransInput(TransactionVO vo);
 
 }
